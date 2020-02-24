@@ -119,7 +119,10 @@ public class RNFSManager extends ReactContextBaseJavaModule {
     Uri uri = getFileUri(filepath, false);
     OutputStream stream;
     try {
-      stream = reactContext.getContentResolver().openOutputStream(uri, append ? "wa" : "w");
+      /* "rwt" mode allows to avoid an issue on Android API 29.
+          More information here:
+            https://github.com/itinance/react-native-fs/issues/700#issuecomment-573926884 */
+      stream = reactContext.getContentResolver().openOutputStream(uri, append ? "wa" : "rwt");
     } catch (FileNotFoundException ex) {
       throw new IORejectionException("ENOENT", "ENOENT: " + ex.getMessage() + ", open '" + filepath + "'");
     }
